@@ -3,10 +3,8 @@ const fs = require('fs');
 
 const app = express();
 
-if (!process.env.PORT)
-    throw new Error("Please specify the port number for the HTTP server with the environment variable PORT");
 
-const PORT = process.env.PORT;
+const PORT = 3000;
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
@@ -17,7 +15,7 @@ app.listen(PORT, () => {
 });
 
 app.get("/video", ((req, res) => {
-    const path = '/Users/acrixf/Desktop/big_buck_bunny_720p_1mb.mp4';
+    const path = './videos/big_buck_bunny_720p_1mb.mp4';
     fs.stat(path, ((err, stats) => {
         if (err) {
             console.error("An error occurred");
