@@ -1,0 +1,7 @@
+export PORT=3000
+export STORAGE_ACCOUNT_NAME=bmkdch04ex1
+export STORAGE_ACCESS_KEY=WuifLdnmIdGyC/erCuE7Pr3SC9M9IMEKeUWTtEmzKI+tqdcVg4X/ti3cZfvqgDMcLcIgCax9ezplJlCvGgt7dg==
+
+npm install --save-dev nodemon
+
+
