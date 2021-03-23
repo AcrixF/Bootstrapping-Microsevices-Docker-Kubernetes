@@ -1,7 +1,12 @@
-docker login bmdkch03ex1.azurecr.io --username bmdkch03ex1 --password G/U1s0GhPwMfeejHFP3PJ9lzPApHGjH1
+## Build a docker compose file
+docker-compose up --build
 
-docker tag video-streaming bmdkch03ex1.azurecr.io/video-streaming:latest
+## Shows all the docker compose
+docker-compose ps
 
-docker push bmdkch03ex1.azurecr.io/video-streaming:latest
+## Stop a docker compose
+docker-compose stop
 
-docker run -d -p 3000:3000 bmdkch03ex1.azurecr.io/video-streaming:latest
+## This will remove the containers
+docker-compose down
+
