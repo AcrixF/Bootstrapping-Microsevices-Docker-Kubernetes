@@ -1,0 +1,6 @@
+npm install --save mongodb
+
+npm install --save amqplib
+
+npm install --save wait-port
+

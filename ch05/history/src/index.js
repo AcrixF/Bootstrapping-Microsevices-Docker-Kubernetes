@@ -1,6 +1,7 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const bodyParser = require("body-parser");
+const amqp = require("amqplib");
 
 
 if (!process.env.DBHOST) {
@@ -11,11 +12,16 @@ if (!process.env.DBNAME) {
     throw new Error("Please specify the name of the database using environment variable DBNAME");
 }
 
+if (!process.env.RABBIT) {
+    throw new Error("Please specify the name of the RabbitMQ host using environment variable RABBIT");
+}
 
 const DBHOST = process.env.DBHOST;
 const DBNAME = process.env.DBNAME;
+const RABBIT = process.env.RABBIT;
 
 
+// Connect to the database.
 function connectDb() {
     return mongodb.MongoClient.connect(DBHOST)
         .then(client => {
@@ -23,54 +29,45 @@ function connectDb() {
         })
 }
 
-//
-// Setup event handlers.
-//
-function setupHandlers(app, db) {
-   const videosCollection = db.collection("videos");
-
-   app.post("/viewed", (req, res) => {
-       const videoPath = req.body.videoPath;
-       videosCollection.insertOne({videoPath: videoPath})
-           .then(() => {
-               console.log(`Added video ${videoPath} to history.`);
-               res.sendStatus(200);
-           })
-           .catch(err => {
-               console.error(`Error adding video ${videoPath} to history.`);
-               console.error(err && err.stack || err);
-               res.sendStatus(500);
-           });
-   });
-
-   app.get("/history", (req, res) => {
-       const skip = parseInt(req.query.skip);
-       const limit = parseInt(req.query.limit);
-
-       videosCollection.find()
-           .skip(skip)
-           .limit(limit)
-           .toArray()
-           .then(documents => {
-               res.json({ history: documents });
-           })
-           .catch(err => {
-               console.error(`Error retrieving history from database.`);
-               console.error(err && err.stack || err);
-               res.sendStatus(500);
-           });
-   })
+//Connect to the RabbitMQ server.
+function connectRabbit() {
+    console.log(`Connecting to RabbitMQ server at ${RABBIT}.`);
+    return amqp.connect(RABBIT)
+        .then(messagingConnection => {
+            console.log("Connected tpo RabbitMQ.");
+            return messagingConnection.createChannel();
+        });
 }
 
-//
+// Setup event handlers.
+function setupHandlers(app, db, messageChannel) {
+   const videosCollection = db.collection("videos");
+
+   function consumeViewedMessage(msg) {
+       console.log("Received a 'viewed' message.");
+
+       const parseMsg = JSON.parse(msg.content.toString());
+       return videosCollection.insertOne({videoPath: parseMsg.videoPath})
+           .then(() => {
+               console.log("Acknowledging message was handled.");
+               messageChannel.ack(msg);
+           });
+   }
+
+   return messageChannel.assertQueue("viewed", {})
+       .then(() => {
+           console.log("Asserted that the 'viewed' queue exists.");
+           return messageChannel.consume("viewed", consumeViewedMessage);
+       });
+}
+
 // Start the HTTP server.
-//
-function startHttpServer(db) {
+function startHttpServer(db, messageChannel) {
     return new Promise(resolve => { // Wrap in a promise so we can be notified when the server has started.
         const app = express();
         app.use(bodyParser.json()); // Enable JSOn body for HTTP requests
 
-        setupHandlers(app, db);
+        setupHandlers(app, db, messageChannel);
 
         const port = process.env.PORT && parseInt(process.env.PORT) || 3000;
         app.listen(port, () => {
@@ -79,13 +76,14 @@ function startHttpServer(db) {
     });
 }
 
-//
 // Application entry point.
-//
 function main() {
-   return connectDb(DBHOST)
+   return connectDb()
        .then(db => {
-           return startHttpServer(db);
+           return connectRabbit()
+               .then(messageChannel => {
+                   return startHttpServer(db, messageChannel)
+               })
        })
 }
 

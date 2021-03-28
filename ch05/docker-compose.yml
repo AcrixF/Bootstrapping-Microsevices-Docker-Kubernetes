@@ -7,6 +7,17 @@ services:
       - "4000:27017"
     restart: always
 
+  rabbit:
+    image: rabbitmq:3.8.5-management
+    container_name: rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "5672"
+      - "15672"
+    restart: always
+
   video-streaming:
     image: video-streaming
     build:
@@ -22,6 +33,9 @@ services:
     environment:
       - PORT=80
       - NODE_ENV=development
+      - RABBIT=amqp://guest:guest@rabbit:5672
+    depends_on:
+      - rabbit
     restart: "no"
 
   history:
@@ -40,6 +54,9 @@ services:
       - DBHOST=mongodb://db:27017
       - DBNAME=history
       - NODE_ENV:development
+      - RABBIT=amqp://guest:guest@rabbit:5672
+      - NODE_ENV=development
     depends_on:
       - db
+      - rabbit
     restart: "no"
