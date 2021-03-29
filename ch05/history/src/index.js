@@ -54,11 +54,18 @@ function setupHandlers(app, db, messageChannel) {
            });
    }
 
-   return messageChannel.assertQueue("viewed", {})
+   return messageChannel.assertExchange("viewed", "fanout")
        .then(() => {
-           console.log("Asserted that the 'viewed' queue exists.");
-           return messageChannel.consume("viewed", consumeViewedMessage);
-       });
+           return messageChannel.assertQueue("", {exclusive: true})
+       })
+       .then(response => {
+           const queueName = response.queue;
+           console.log(`Created queue ${queueName}, binding it to "viewed" exchange.`);
+           return messageChannel.bindQueue(queueName, "viewed", "") // Bind the queue to the exchange
+            .then(() => {
+                return messageChannel.consume(queueName, consumeViewedMessage);
+           })
+       })
 }
 
 // Start the HTTP server.

@@ -15,15 +15,23 @@ function connectRabbit() {
     return amqp.connect(RABBIT) // Connect to the RabbitMQ server.
         .then(connection => {
             console.log("Connected to RabbitMQ.");
-            return connection.createChannel(); // Create a RabbitMQ messaging channel.
+
+            return connection.createChannel()
+                .then(messageChannel => {
+                    return messageChannel.assertExchange("viewed", "fanout")
+                        .then(() => {
+                            return messageChannel;
+                        });
+                });
         });
 }
 
 function sendViewedMessage(messageChannel, videoPath) {
-    console.log(`Publishing message on "viewed" queue.`);
-    const msg = {videoPath: videoPath};
-    const jsonMsg  = JSON.stringify(msg);
-    messageChannel.publish("", "viewed", Buffer.from(jsonMsg));
+    console.log(`Publishing message on "viewed" exchange.`);
+
+    const msg = { videoPath: videoPath };
+    const jsonMsg = JSON.stringify(msg);
+    messageChannel.publish("viewed", "", Buffer.from(jsonMsg)); // Publish message to the "viewed" exchange.
 }
 
 function setupHandlers(app, messageChannel) {
