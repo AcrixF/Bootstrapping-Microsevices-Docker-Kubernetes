@@ -1,0 +1,14 @@
+az login
+
+az account list
+
+az account show
+
+az aks get-versions --location westus
+
+
+## inside script
+
+terraform apply
+
+terraform destroy
