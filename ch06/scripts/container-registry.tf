@@ -1,9 +1,9 @@
 resource "azurerm_container_registry" "container_registry" {
-  name = "tubeflix"
+  name                = var.app_name
   resource_group_name = azurerm_resource_group.flixtube.name
-  location = "westus"
-  admin_enabled = true
-  sku = "Basic"
+  location            = var.location
+  admin_enabled       = true
+  sku                 = "Basic"
 }
 
 output "registry_hostname" {

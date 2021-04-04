@@ -1,0 +1,11 @@
+kubectl top
+
+kubectl top node
+
+kubectl top pod
+
+kubectl api-versions
+
+kubectl cluster-info
+
+
