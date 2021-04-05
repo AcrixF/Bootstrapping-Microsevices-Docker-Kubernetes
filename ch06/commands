@@ -49,8 +49,6 @@ http://localhost:8001
 ## Dashboard
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=default
 
-
-
 ## List services in our cluster
 kubectl get services
 

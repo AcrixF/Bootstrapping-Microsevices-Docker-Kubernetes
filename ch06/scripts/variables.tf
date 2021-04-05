@@ -11,9 +11,9 @@ variable admin_username {
 }
 
 variable "client_secret" {
-  
+
 }
 
 variable "client_id" {
- 
+
 }
