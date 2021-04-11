@@ -1,7 +1,7 @@
 resource "azurerm_kubernetes_cluster" "cluster" {
   name                = var.app_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.tubeflix.name
+  resource_group_name = azurerm_resource_group.kubia.name
   dns_prefix          = var.app_name
   kubernetes_version  = "1.18.14"
 
