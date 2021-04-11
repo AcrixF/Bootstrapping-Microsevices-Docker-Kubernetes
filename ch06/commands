@@ -54,7 +54,12 @@ kubectl get services
 
 ## Connect through client to the database
 
+## Connect to RabbitMQ
+<IP>:15672/
 
+terraform apply -var="app_version=1" -var="client_id=6a4f5e9b-b1d4-40ac-8a88-8875015ecc91" -var="client_secret=GiYKgH5yg4u_1~tTqi7~XKLNmqFVCGeyku" -auto-approve
+
+terraform destroy -var="app_version=1" -var="client_id=6a4f5e9b-b1d4-40ac-8a88-8875015ecc91" -var="client_secret=GiYKgH5yg4u_1~tTqi7~XKLNmqFVCGeyku" -auto-approve
 
 
 
