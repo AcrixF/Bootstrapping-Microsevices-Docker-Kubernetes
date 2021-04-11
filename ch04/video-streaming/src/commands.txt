@@ -1,0 +1,12 @@
+## Build a docker compose file
+docker-compose up --build
+
+## Shows all the docker compose
+docker-compose ps
+
+## Stop a docker compose
+docker-compose stop
+
+## This will remove the containers
+docker-compose down
+

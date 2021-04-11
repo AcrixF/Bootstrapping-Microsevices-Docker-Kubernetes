@@ -1,0 +1,66 @@
+az login
+
+az account list
+
+az account show
+
+az aks get-versions --location westus
+
+az aks get-versions --location westus --output table
+
+
+## inside script
+
+terraform apply
+
+terraform destroy
+
+## Create a Service Principal
+
+az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/0872f4c4-9e2b-455b-96f9-dfe052cecb1f"
+
+## Connect to Kubernetes
+az aks get-credentials --resource-group tubeflix --name tubeflix
+
+## Configuration File
+~/.kube/config
+
+## Install Kubectl in MacOs
+arch -x86_64 brew install kubectl
+
+## verify Kubectl version
+kubectl version
+
+## After connecting to kubernetes we can extract it's info
+kubectl cluster-info
+
+## Fetch nodes from cluster
+kubectl get nodes
+
+## Install  Kubectl Dashboard
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.4/aio/deploy/recommended.yaml
+
+## Connect to kubectl dashboard
+kubectl proxy
+
+## Access to API Docker Catalog
+http://localhost:8001
+
+## Dashboard
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=default
+
+## List services in our cluster
+kubectl get services
+
+## Connect through client to the database
+
+## Connect to RabbitMQ
+<IP>:15672/
+
+terraform apply -var="app_version=1" -var="client_id=6a4f5e9b-b1d4-40ac-8a88-8875015ecc91" -var="client_secret=GiYKgH5yg4u_1~tTqi7~XKLNmqFVCGeyku" -auto-approve
+
+terraform destroy -var="app_version=1" -var="client_id=6a4f5e9b-b1d4-40ac-8a88-8875015ecc91" -var="client_secret=GiYKgH5yg4u_1~tTqi7~XKLNmqFVCGeyku" -auto-approve
+
+
+
+

@@ -1,0 +1,7 @@
+docker login bmdkch03ex1.azurecr.io --username bmdkch03ex1 --password G/U1s0GhPwMfeejHFP3PJ9lzPApHGjH1
+
+docker tag video-streaming bmdkch03ex1.azurecr.io/video-streaming:latest
+
+docker push bmdkch03ex1.azurecr.io/video-streaming:latest
+
+docker run -d -p 3000:3000 bmdkch03ex1.azurecr.io/video-streaming:latest

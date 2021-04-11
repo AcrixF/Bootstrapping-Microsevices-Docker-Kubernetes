@@ -1,0 +1,12 @@
+npm install --save express
+
+npm install --save mongodb
+
+npm install --save-dev nodemon
+
+npm install --save body-parser
+
+npm install --save amqplib
+
+npm install --save wait-port
+
