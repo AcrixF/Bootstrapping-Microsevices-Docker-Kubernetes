@@ -45,6 +45,7 @@ resource "kubernetes_service" "rabbit" {
     }
     port {
       port = 5672
+      target_port = 5672
     }
   }
 }

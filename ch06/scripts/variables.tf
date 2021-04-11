@@ -17,3 +17,7 @@ variable "client_secret" {
 variable "client_id" {
 
 }
+
+variable "app_version" {
+
+}
